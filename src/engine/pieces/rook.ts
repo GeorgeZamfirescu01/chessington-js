@@ -12,8 +12,14 @@ export default class Rook extends Piece {
         const position = board.findPiece(this);
         const availableMoves: Square[] = [];
 
-        function isIn(row: Number, col: Number) {
+        function isIn(row: number, col: number) {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
+        }
+
+        const canBeTaken = (row: number, col: number) => {
+            const square = new Square(row, col);
+            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
+                board.getPiece(square)?.constructor.name != 'King';
         }
 
         const availableDirections: number[][] = [
@@ -32,6 +38,9 @@ export default class Rook extends Piece {
                     const newSquare = new Square(newRow, newCol);
 
                     if ((!isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
+                        if (canBeTaken(newRow, newCol)) {
+                            availableMoves.push(newSquare);
+                        }
                         break;
                     }
 
