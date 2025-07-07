@@ -20,6 +20,12 @@ export default class Pawn extends Piece {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
+        const canBeTaken = (row: number, col: number) => {
+            const square = new Square(row, col);
+            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
+                board.getPiece(square)?.constructor.name != 'King';
+        }
+
         if (isIn(squareForward.row, squareForward.col) && board.getPiece(squareForward) === undefined) {
             availableMoves.push(new Square(position.row + direction, position.col));
             if (isIn(squareTwoForward.row, squareTwoForward.col) && board.getPiece(squareTwoForward) === undefined) {
@@ -27,6 +33,15 @@ export default class Pawn extends Piece {
                     availableMoves.push(squareTwoForward);
                 }
             }
+        }
+
+        let newSquare = new Square(position.row + direction, position.col + 1);
+        if (canBeTaken(position.row + direction, position.col + 1) && board.getPiece(newSquare) !== undefined) {
+            availableMoves.push(newSquare);
+        }
+        newSquare = new Square(position.row + direction, position.col - 1);
+        if (canBeTaken(position.row + direction, position.col - 1) && board.getPiece(newSquare) !== undefined) {
+            availableMoves.push(newSquare);
         }
 
         return availableMoves;
