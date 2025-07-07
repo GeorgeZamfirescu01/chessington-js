@@ -16,6 +16,12 @@ export default class King extends Piece {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
+        const canBeTaken = (row: number, col: number) => {
+            const square = new Square(row, col);
+            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
+                board.getPiece(square)?.constructor.name != 'King';
+        }
+
         const offsets = [
             [1, 0],
             [-1, 0],
@@ -31,7 +37,9 @@ export default class King extends Piece {
             const [dr, dc] = offset;
             const newRow = position.row + dr, newCol = position.col + dc;
             if (isIn(newRow, newCol)) {
-                availableMoves.push(new Square(newRow, newCol));
+                if (canBeTaken(newRow, newCol)) {
+                    availableMoves.push(new Square(newRow, newCol));
+                }
             }
         });
 
