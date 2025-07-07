@@ -12,16 +12,6 @@ export default class King extends Piece {
         const position = board.findPiece(this);
         const availableMoves: Square[] = [];
 
-        function isIn(row: number, col: number) {
-            return row >= 0 && col >= 0 && row < 8 && col < 8;
-        }
-
-        const canBeTaken = (row: number, col: number) => {
-            const square = new Square(row, col);
-            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
-                board.getPiece(square)?.constructor.name != 'King';
-        }
-
         const offsets = [
             [1, 0],
             [-1, 0],
@@ -35,9 +25,10 @@ export default class King extends Piece {
 
         offsets.forEach(offset => {
             const [dr, dc] = offset;
-            const newRow = position.row + dr, newCol = position.col + dc;
-            if (isIn(newRow, newCol)) {
-                if (canBeTaken(newRow, newCol)) {
+            const newRow = position.row + dr;
+            const newCol = position.col + dc;
+            if (board.isIn(newRow, newCol)) {
+                if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
                     availableMoves.push(new Square(newRow, newCol));
                 }
             }

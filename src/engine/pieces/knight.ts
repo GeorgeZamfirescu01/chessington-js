@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
+import King from "./king";
 
 export default class Knight extends Piece {
     public constructor(player: Player) {
@@ -12,32 +13,26 @@ export default class Knight extends Piece {
         const position = board.findPiece(this);
         const availableMoves: Square[] = [];
 
-        function isIn(row: number, col: number) {
-            return row >= 0 && col >= 0 && row < 8 && col < 8;
-        }
-
-        const canBeTaken = (row: number, col: number) => {
-            const square = new Square(row, col);
-            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
-                board.getPiece(square)?.constructor.name != 'King';
-        }
-
         const options = [[1, 1], [-1, -1], [-1, 1], [1, -1]];
         options.forEach(option => {
             const [rowSign, colSign] = option;
 
             let newRow = position.row + 2 * rowSign;
             let newCol = position.col + 1 * colSign;
-            if (isIn(newRow, newCol)) {
-                if (canBeTaken(newRow, newCol)) {
-                    availableMoves.push(new Square(newRow, newCol));
+            if (board.isIn(newRow, newCol)) {
+                if (board.canBeTaken(this.player, newRow, newCol)) {
+                    if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
+                        availableMoves.push(new Square(newRow, newCol));
+                    }
                 }
             }
             newRow = position.row + 1 * rowSign;
             newCol = position.col + 2 * colSign;
-            if (isIn(newRow, newCol)) {
-                if (canBeTaken(newRow, newCol)) {
-                    availableMoves.push(new Square(newRow, newCol));
+            if (board.isIn(newRow, newCol)) {
+                if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
+                    if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
+                        availableMoves.push(new Square(newRow, newCol));
+                    }
                 }
             }
         });

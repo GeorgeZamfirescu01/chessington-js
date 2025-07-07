@@ -10,7 +10,7 @@ describe('Board', () => {
 
         let board : Board;
         beforeEach(() => { // Common code executed before each test.
-            board = new Board(undefined);
+            board = new Board();
         });
 
         it('can be added to the board', () => {

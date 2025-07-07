@@ -4,6 +4,7 @@ import Pawn from '../../../src/engine/pieces/pawn';
 import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
+import Queen from "../../../src/engine/pieces/queen";
 
 describe('King', () => {
 
@@ -76,4 +77,69 @@ describe('King', () => {
 
         moves.should.not.deep.include(Square.at(5, 5));
     });
+
+    it('can get checked', () => {
+        const king = new King(Player.WHITE);
+        const queen = new Queen(Player.BLACK);
+        board.setPiece(new Square(7, 0), king);
+        board.setPiece(new Square(5, 1), queen);
+
+        board.isInCheck(Player.WHITE).should.be.equal(false);
+
+        king.moveTo(board, new Square(7, 1));
+        board.isInCheck(Player.WHITE).should.be.equal(true);
+    })
+
+    it('can get checkmated', () => {
+        const king = new King(Player.WHITE);
+        const queen = new Queen(Player.BLACK);
+        const pawn = new Pawn(Player.WHITE);
+
+        board.setPiece(new Square(7, 0), king);
+        board.setPiece(new Square(6, 0), queen);
+        board.isInCheckmate(Player.WHITE).should.be.equal(false);
+
+        board.setPiece(new Square(5, 1), pawn);
+        board.isInCheckmate(Player.WHITE).should.be.equal(true);
+    })
+
+    // it('can do castling on kingside', () => {
+    //     const king = new King(Player.WHITE);
+    //     const rook = new Rook(Player.WHITE);
+    //     board.setPiece(new Square(0, 4), king);
+    //     board.setPiece(new Square(0, 7), rook);
+    //
+    //     king.moveTo(board, new Square(0, 5));
+    //
+    //     board.findPiece(rook).should.deep.equal(new Square(0, 5));
+    //     board.findPiece(king).should.deep.equal(new Square(0, 6));
+    // });
+    //
+    // it('can not do castling on kingside with piece in-between', () => {
+    //     const king = new King(Player.WHITE);
+    //     const rook = new Rook(Player.WHITE);
+    //     const knight = new Knight(Player.WHITE);
+    //     board.setPiece(new Square(0, 4), king);
+    //     board.setPiece(new Square(0, 6), knight);
+    //     board.setPiece(new Square(0, 7), rook);
+    //
+    //     king.moveTo(board, new Square(0, 5));
+    //
+    //     board.findPiece(rook).should.deep.equal(new Square(0, 7));
+    //     board.findPiece(king).should.deep.equal(new Square(0, 4));
+    // });
+    //
+    // it('can not do castling on kingside in check', () => {
+    //     const king = new King(Player.WHITE);
+    //     const rook = new Rook(Player.WHITE);
+    //     const knight = new Knight(Player.WHITE);
+    //     board.setPiece(new Square(0, 4), king);
+    //     board.setPiece(new Square(0, 6), knight);
+    //     board.setPiece(new Square(0, 7), rook);
+    //
+    //     king.moveTo(board, new Square(0, 5));
+    //
+    //     board.findPiece(rook).should.deep.equal(new Square(0, 7));
+    //     board.findPiece(king).should.deep.equal(new Square(0, 4));
+    // });
 });

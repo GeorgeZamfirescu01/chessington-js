@@ -74,7 +74,8 @@ function onDrop(source, target) {
 
 function updateStatus() {
     const player = board.currentPlayer === Player.WHITE ? 'White' : 'Black';
-    document.getElementById('turn-status').innerHTML = `${player} to move`;
+    const message = board.isInCheckmate(player) ? `Checkmate. ${player} lost` : `${player} to move`;
+    document.getElementById('turn-status').innerHTML = message;
 }
 
 function boardInStartingPosition() {

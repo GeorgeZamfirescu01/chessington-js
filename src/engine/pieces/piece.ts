@@ -6,12 +6,13 @@ export default class Piece {
     public player: Player;
     public timeLastMoved: number = 0;
     public previousPosition?: Square = undefined;
+    public checks: boolean = false;
 
     public constructor(player: Player) {
         this.player = player;
     }
 
-    public getAvailableMoves(board: Board) {
+    public getAvailableMoves(board: Board): Square[] {
         throw new Error('This method must be implemented, and return a list of available moves');
     }
 

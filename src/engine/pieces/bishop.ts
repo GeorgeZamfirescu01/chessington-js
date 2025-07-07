@@ -2,6 +2,7 @@ import Piece from './piece';
 import Player from '../player';
 import Board from '../board';
 import Square from "../square";
+import King from "./king";
 
 export default class Bishop extends Piece {
     public constructor(player: Player) {
@@ -11,16 +12,6 @@ export default class Bishop extends Piece {
     public getAvailableMoves(board: Board) {
         const position = board.findPiece(this);
         const availableMoves: Square[] = [];
-
-        function isIn(row: Number, col: Number) {
-            return row >= 0 && col >= 0 && row < 8 && col < 8;
-        }
-
-        const canBeTaken = (row: number, col: number) => {
-            const square = new Square(row, col);
-            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
-                board.getPiece(square)?.constructor.name != 'King';
-        }
 
         const availableDirections: number[][] = [
             [1, 1],
@@ -37,8 +28,8 @@ export default class Bishop extends Piece {
                 const newCol = position.col + dc * offset;
                 const newSquare = new Square(newRow, newCol);
 
-                if ((!isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
-                    if (canBeTaken(newRow, newCol)) {
+                if ((!board.isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
+                    if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
                         availableMoves.push(newSquare);
                     }
                     break;
