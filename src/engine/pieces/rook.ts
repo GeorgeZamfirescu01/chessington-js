@@ -45,4 +45,11 @@ export default class Rook extends Piece {
 
         return availableMoves;
     }
+
+    public clone() {
+        const copy = new Rook(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
+    }
 }

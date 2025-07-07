@@ -93,13 +93,13 @@ describe('King', () => {
     it('can get checkmated', () => {
         const king = new King(Player.WHITE);
         const queen = new Queen(Player.BLACK);
-        const pawn = new Pawn(Player.WHITE);
+        const pawn = new Pawn(Player.BLACK);
 
-        board.setPiece(new Square(7, 0), king);
-        board.setPiece(new Square(6, 0), queen);
+        board.setPiece(new Square(0, 0), king);
+        board.setPiece(new Square(1, 0), queen);
         board.isInCheckmate(Player.WHITE).should.be.equal(false);
 
-        board.setPiece(new Square(5, 1), pawn);
+        board.setPiece(new Square(2, 1), pawn);
         board.isInCheckmate(Player.WHITE).should.be.equal(true);
     })
 

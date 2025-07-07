@@ -29,8 +29,12 @@ export default class Bishop extends Piece {
                 const newSquare = new Square(newRow, newCol);
 
                 if ((!board.isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
-                    if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
-                        availableMoves.push(newSquare);
+                    if (board.canBeTaken(this.player, newRow, newCol)) {
+                        if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
+                            availableMoves.push(newSquare);
+                        } else {
+                            this.checks = true;
+                        }
                     }
                     break;
                 }
@@ -40,5 +44,12 @@ export default class Bishop extends Piece {
         });
 
         return availableMoves;
+    }
+
+    public clone() {
+        const copy = new Bishop(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
     }
 }

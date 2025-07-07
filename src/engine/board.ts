@@ -16,8 +16,19 @@ export default class Board {
         this.board = this.createBoard();
     }
 
+    public clone() {
+        const newBoard = new Board();
+        for (let i = 0; i < this.BOARD_SIDE; i++) {
+            for (let j = 0; j < this.BOARD_SIDE; j++) {
+                newBoard.board[i][j] = this.board[i][j]?.clone();
+            }
+        }
+
+        return newBoard;
+    }
+
     public isIn(row: number, col: number) {
-        return row >= 0 && col >= 0 && row < 8 && col < 8;
+        return row >= 0 && col >= 0 && row < this.BOARD_SIDE && col < this.BOARD_SIDE;
     }
 
     public canBeTaken(byPlayer: Player, row: number, col: number) {
@@ -78,10 +89,10 @@ export default class Board {
     }
 
     public isInCheck(player: Player) {
-        const mainKingSquare = this.findKings()[player.toString()];
         for (const piece of this.board.flat(1)) {
             if (!!piece && piece.player !== player) {
-                if (piece.getAvailableMoves(this).filter(square => square.equals(mainKingSquare)).length > 0) {
+                piece.getAvailableMoves(this);
+                if (piece.checks) {
                     return true;
                 }
             }
@@ -99,9 +110,17 @@ export default class Board {
         for (const piece of this.board.flat(1)) {
             if (!!piece && piece.player === player) {
                 for (const toSquare of piece.getAvailableMoves(this)) {
-                    const copiedBoard: Board = JSON.parse(JSON.stringify(this));
+                    const copiedBoard = this.clone();
                     const copyPiece = copiedBoard.getPiece(this.findPiece(piece));
+                    console.log(piece.getAvailableMoves(this));
                     copyPiece?.moveTo(copiedBoard, toSquare);
+                    for (const row of copiedBoard.board) {
+                        for (const elem of row) {
+                            if (elem) {
+                                console.log(elem, elem.constructor.name);
+                            }
+                        }
+                    }
                     if (!copiedBoard.isInCheck(player)) {
                         escaped = true;
                         break;
@@ -113,7 +132,7 @@ export default class Board {
             }
         }
 
-        return escaped;
+        return !escaped;
     }
 
     private createBoard() {

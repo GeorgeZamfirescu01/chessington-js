@@ -30,12 +30,16 @@ export default class Pawn extends Piece {
         if (board.canBeTaken(this.player, position.row + direction, position.col + 1) && board.getPiece(newSquare) !== undefined) {
             if (!(board.getPiece(newSquare) instanceof King)) {
                 availableMoves.push(newSquare);
+            } else {
+                this.checks = true;
             }
         }
         newSquare = new Square(position.row + direction, position.col - 1);
         if (board.canBeTaken(this.player, position.row + direction, position.col - 1) && board.getPiece(newSquare) !== undefined) {
             if (!(board.getPiece(newSquare) instanceof King)) {
                 availableMoves.push(newSquare);
+            } else {
+                this.checks = true;
             }
         }
 
@@ -58,5 +62,12 @@ export default class Pawn extends Piece {
         }
 
         return availableMoves;
+    }
+
+    public clone() {
+        const copy = new Pawn(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
     }
 }

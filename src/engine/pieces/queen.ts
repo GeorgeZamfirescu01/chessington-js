@@ -50,4 +50,11 @@ export default class Queen extends Piece {
 
         return availableMoves;
     }
+
+    public clone() {
+        const copy = new Queen(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
+    }
 }

@@ -20,4 +20,11 @@ export default class Piece {
         const currentSquare = board.findPiece(this);
         board.movePiece(currentSquare, newSquare);
     }
+
+    public clone() {
+        const copy = new Piece(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
+    }
 }

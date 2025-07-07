@@ -28,12 +28,23 @@ export default class King extends Piece {
             const newRow = position.row + dr;
             const newCol = position.col + dc;
             if (board.isIn(newRow, newCol)) {
-                if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
-                    availableMoves.push(new Square(newRow, newCol));
+                if (board.canBeTaken(this.player, newRow, newCol)) {
+                    if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
+                        availableMoves.push(new Square(newRow, newCol));
+                    } else {
+                        this.checks = true;
+                    }
                 }
             }
         });
 
         return availableMoves;
+    }
+
+    public clone() {
+        const copy = new King(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
     }
 }

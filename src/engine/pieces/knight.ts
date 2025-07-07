@@ -23,6 +23,8 @@ export default class Knight extends Piece {
                 if (board.canBeTaken(this.player, newRow, newCol)) {
                     if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
                         availableMoves.push(new Square(newRow, newCol));
+                    } else {
+                        this.checks = true;
                     }
                 }
             }
@@ -32,11 +34,20 @@ export default class Knight extends Piece {
                 if (board.canBeTaken(this.player, newRow, newCol) && !(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
                     if (!(board.getPiece(new Square(newRow, newCol)) instanceof King)) {
                         availableMoves.push(new Square(newRow, newCol));
+                    } else {
+                        this.checks = true;
                     }
                 }
             }
         });
 
         return availableMoves;
+    }
+
+    public clone() {
+        const copy = new Knight(this.player);
+        copy.previousPosition = this.previousPosition;
+
+        return copy;
     }
 }
