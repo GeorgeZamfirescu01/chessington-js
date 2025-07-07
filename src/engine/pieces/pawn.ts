@@ -44,6 +44,24 @@ export default class Pawn extends Piece {
             availableMoves.push(newSquare);
         }
 
+        // checking for en passant
+        newSquare = new Square(position.row, position.col + 1);
+        let otherPiece = board.getPiece(newSquare);
+        if (canBeTaken(position.row, position.col + 1) && otherPiece?.constructor.name === 'Pawn' &&
+                otherPiece.player !== this.player && otherPiece.timeLastMoved === board.moveCounter - 1 &&
+                otherPiece.previousPosition !== undefined && Math.abs(otherPiece.previousPosition.row - newSquare.row) === 2) {
+            availableMoves.push(new Square(position.row + direction, position.col + 1));
+            board.enPassant = new Square(position.row + direction, position.col + 1);
+        }
+        newSquare = new Square(position.row, position.col - 1);
+        otherPiece = board.getPiece(newSquare);
+        if (canBeTaken(position.row, position.col - 1) && otherPiece?.constructor.name === 'Pawn' &&
+                otherPiece.player !== this.player && otherPiece.timeLastMoved === board.moveCounter - 1 &&
+                otherPiece.previousPosition !== undefined && Math.abs(otherPiece.previousPosition.row - newSquare.row) === 2) {
+            availableMoves.push(new Square(position.row + direction, position.col - 1));
+            board.enPassant = new Square(position.row + direction, position.col - 1);
+        }
+
         return availableMoves;
     }
 }

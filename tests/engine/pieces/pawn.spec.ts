@@ -5,6 +5,7 @@ import King from '../../../src/engine/pieces/king';
 import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
+import {should} from "chai";
 
 describe('Pawn', () => {
     let board: Board;
@@ -101,6 +102,30 @@ describe('Pawn', () => {
             pawn.timeLastMoved.should.be.equal(2);
         })
 
+        it('can en passant', () => {
+            const pawn = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(1, 0), pawn);
+            const pawnB = new Pawn(Player.BLACK);
+            board.setPiece(Square.at(6, 1), pawnB);
+            const pawnB2 = new Pawn(Player.BLACK);
+            board.setPiece(Square.at(6, 2), pawnB2);
+
+
+            pawn.moveTo(board, new Square(3, 0));
+            pawnB2.moveTo(board, new Square(5, 2));
+            pawn.moveTo(board, new Square(4, 0));
+            pawnB.moveTo(board, new Square(4, 1));
+
+            const moves = pawn.getAvailableMoves(board);
+            moves.should.deep.include(new Square(5, 1));
+
+            console.log(board.enPassant);
+            pawn.moveTo(board, new Square(5, 1));
+            console.log(board.enPassant);
+
+            should().equal(board.getPiece(new Square(4, 1)), undefined);
+        })
+
     });
 
     describe('black pawns', () => {
@@ -179,6 +204,29 @@ describe('Pawn', () => {
 
             moves.should.not.deep.include(Square.at(3, 3));
         });
+
+        it('can en passant', () => {
+            const pawnW = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(1, 0), pawnW);
+            const pawnB = new Pawn(Player.BLACK);
+            board.setPiece(Square.at(6, 1), pawnB);
+            const pawnW2 = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(1, 2), pawnW2);
+
+
+            pawnW.moveTo(board, new Square(2, 0));
+            pawnB.moveTo(board, new Square(4, 1));
+            pawnW.moveTo(board, new Square(3, 0));
+            pawnB.moveTo(board, new Square(3, 1));
+            pawnW2.moveTo(board, new Square(3, 2));
+
+            const moves = pawnB.getAvailableMoves(board);
+            moves.should.deep.include(new Square(2, 2));
+
+            pawnB.moveTo(board, new Square(2, 2));
+
+            should().equal(board.getPiece(new Square(3, 2)), undefined);
+        })
     });
 
     it('cannot move if there is a piece in front', () => {

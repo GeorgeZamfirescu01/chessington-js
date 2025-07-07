@@ -5,6 +5,7 @@ import Square from '../square';
 export default class Piece {
     public player: Player;
     public timeLastMoved: number = 0;
+    public previousPosition?: Square = undefined;
 
     public constructor(player: Player) {
         this.player = player;
