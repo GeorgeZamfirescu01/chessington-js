@@ -15,7 +15,7 @@ export default class Pawn extends Piece {
 
 
         availableMoves.push(new Square(position.row + direction, position.col));
-        if (this.player === Player.WHITE && position.row === 1 || this.player === Player.BLACK && position.row === 7) {
+        if (this.player === Player.WHITE && position.row === 1 || this.player === Player.BLACK && position.row === 6) {
             availableMoves.push(new Square(position.row + 2 * direction, position.col));
         }
 
