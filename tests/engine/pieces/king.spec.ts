@@ -6,7 +6,7 @@ import Square from '../../../src/engine/square';
 
 describe('King', () => {
 
-    let board;
+    let board: Board;
     beforeEach(() => board = new Board());
 
     it('can move to adjacent squares', () => {
