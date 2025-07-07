@@ -7,7 +7,7 @@ import GameSettings from '../../../src/engine/gameSettings';
 
 describe('Queen', () => {
 
-    let board;
+    let board: Board;
     beforeEach(() => board = new Board());
 
     it('can move laterally', () => {
