@@ -16,6 +16,12 @@ export default class Bishop extends Piece {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
+        const canBeTaken = (row: number, col: number) => {
+            const square = new Square(row, col);
+            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
+                board.getPiece(square)?.constructor.name != 'King';
+        }
+
         const availableDirections: number[][] = [
             [1, 1],
             [-1, -1],
@@ -32,6 +38,9 @@ export default class Bishop extends Piece {
                 const newSquare = new Square(newRow, newCol);
 
                 if ((!isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
+                    if (canBeTaken(newRow, newCol)) {
+                        availableMoves.push(newSquare);
+                    }
                     break;
                 }
 
