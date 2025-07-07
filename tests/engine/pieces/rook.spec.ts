@@ -6,7 +6,7 @@ import Square from '../../../src/engine/square';
 
 describe('Rook', () => {
 
-    let board;
+    let board: Board;
     beforeEach(() => board = new Board());
 
     it('can move laterally', () => {
