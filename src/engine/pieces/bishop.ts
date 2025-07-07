@@ -10,24 +10,34 @@ export default class Bishop extends Piece {
 
     public getAvailableMoves(board: Board) {
         const position = board.findPiece(this);
-        const availableMoves = [];
-        const BOARD_SIDE = 8;
+        const availableMoves: Square[] = [];
 
-        function isIn(idx: number): boolean {
-            return idx >= 0 && idx < 8;
+        function isIn(row: Number, col: Number) {
+            return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
-        for (let i = 0; i < BOARD_SIDE; i++) {
-            if (i != position.row) {
-                const dif = i - position.row;
-                if (isIn(position.col + dif)) {
-                    availableMoves.push(new Square(i, position.col + dif));
+        const availableDirections: number[][] = [
+            [1, 1],
+            [-1, -1],
+            [-1, 1],
+            [1, -1],
+        ];
+
+        availableDirections.forEach(direction => {
+            const [dr, dc] = direction;
+
+            for (let offset = 1; offset < 7; offset++) {
+                const newRow = position.row + dr * offset;
+                const newCol = position.col + dc * offset;
+                const newSquare = new Square(newRow, newCol);
+
+                if ((!isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
+                    break;
                 }
-                if (isIn(position.col - dif)) {
-                    availableMoves.push(new Square(i, position.col - dif));
-                }
+
+                availableMoves.push(newSquare);
             }
-        }
+        });
 
         return availableMoves;
     }

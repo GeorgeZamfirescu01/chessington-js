@@ -16,40 +16,26 @@ export default class Rook extends Piece {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
-        const availableDirections: [boolean, [number, number]][] = [
-            [true, [1, 0]],
-            [true, [-1, 0]],
-            [true, [0, 1]],
-            [true, [0, -1]],
+        const availableDirections: number[][] = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
         ];
 
-        availableDirections.forEach(info => {
-            const [available, dirChange] = info;
-            const [dr, dc] = dirChange;
-
+        availableDirections.forEach(direction => {
+            const [dr, dc] = direction;
 
             for (let offset = 1; offset < 7; offset++) {
-                if (dr !== 0) {
                     const newRow = position.row + dr * offset;
-                    const newSquare = new Square(newRow, position.col);
-
-                    if ((!isIn(newRow, position.col)) || board.getPiece(newSquare) !== undefined) {
-                        break;
-                    }
-
-                    availableMoves.push(newSquare);
-                }
-
-                if (dc !== 0) {
                     const newCol = position.col + dc * offset;
-                    const newSquare = new Square(position.row, newCol);
+                    const newSquare = new Square(newRow, newCol);
 
-                    if ((!isIn(position.row, newCol)) || board.getPiece(newSquare) !== undefined) {
+                    if ((!isIn(newRow, newCol)) || board.getPiece(newSquare) !== undefined) {
                         break;
                     }
 
                     availableMoves.push(newSquare);
-                }
             }
         });
 
