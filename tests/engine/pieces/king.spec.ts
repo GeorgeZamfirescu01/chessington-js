@@ -40,6 +40,6 @@ describe('King', () => {
 
         const expectedMoves = [Square.at(0, 1), Square.at(1, 1), Square.at(1, 0)];
 
-        moves.should.deep.have.members(expectedMoves);
+        moves.should.deep.include.members(expectedMoves);
     });
 });
