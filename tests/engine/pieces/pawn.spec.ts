@@ -84,6 +84,23 @@ describe('Pawn', () => {
             moves.should.not.deep.include(Square.at(5, 3));
         });
 
+        it('has its movement timestamps tracked', () => {
+            const pawn = new Pawn(Player.WHITE);
+            board.setPiece(Square.at(1, 0), pawn);
+            const pawnB = new Pawn(Player.BLACK);
+            board.setPiece(Square.at(6, 0), pawnB);
+
+
+            let moves = pawn.getAvailableMoves(board);
+            pawn.moveTo(board, moves[0]);
+            moves = pawnB.getAvailableMoves(board);
+            pawnB.moveTo(board, moves[0]);
+            moves = pawn.getAvailableMoves(board);
+            pawn.moveTo(board, moves[0]);
+
+            pawn.timeLastMoved.should.be.equal(2);
+        })
+
     });
 
     describe('black pawns', () => {
