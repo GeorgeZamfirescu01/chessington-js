@@ -16,6 +16,12 @@ export default class Knight extends Piece {
             return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
+        const canBeTaken = (row: number, col: number) => {
+            const square = new Square(row, col);
+            return isIn(row, col) && board.getPiece(square)?.player !== this.player &&
+                board.getPiece(square)?.constructor.name != 'King';
+        }
+
         const options = [[1, 1], [-1, -1], [-1, 1], [1, -1]];
         options.forEach(option => {
             const [rowSign, colSign] = option;
@@ -23,12 +29,16 @@ export default class Knight extends Piece {
             let newRow = position.row + 2 * rowSign;
             let newCol = position.col + 1 * colSign;
             if (isIn(newRow, newCol)) {
-                availableMoves.push(new Square(newRow, newCol));
+                if (canBeTaken(newRow, newCol)) {
+                    availableMoves.push(new Square(newRow, newCol));
+                }
             }
             newRow = position.row + 1 * rowSign;
             newCol = position.col + 2 * colSign;
             if (isIn(newRow, newCol)) {
-                availableMoves.push(new Square(newRow, newCol));
+                if (canBeTaken(newRow, newCol)) {
+                    availableMoves.push(new Square(newRow, newCol));
+                }
             }
         });
 
