@@ -10,17 +10,49 @@ export default class Rook extends Piece {
 
     public getAvailableMoves(board: Board) {
         const position = board.findPiece(this);
-        const availableMoves = [];
+        const availableMoves: Square[] = [];
 
-        for (let i = 0; i < 8; i++) {
-            if (i != position.row) {
-                availableMoves.push(new Square(i, position.col));
-            }
-            if (i != position.col) {
-                availableMoves.push(new Square(position.row, i));
-            }
+        function isIn(row: Number, col: Number) {
+            return row >= 0 && col >= 0 && row < 8 && col < 8;
         }
 
-        return availableMoves
+        const availableDirections: [boolean, [number, number]][] = [
+            [true, [1, 0]],
+            [true, [-1, 0]],
+            [true, [0, 1]],
+            [true, [0, -1]],
+        ];
+
+        availableDirections.forEach(info => {
+            const [available, dirChange] = info;
+            const [dr, dc] = dirChange;
+
+
+            for (let offset = 1; offset < 7; offset++) {
+                if (dr !== 0) {
+                    const newRow = position.row + dr * offset;
+                    const newSquare = new Square(newRow, position.col);
+
+                    if ((!isIn(newRow, position.col)) || board.getPiece(newSquare) !== undefined) {
+                        break;
+                    }
+
+                    availableMoves.push(newSquare);
+                }
+
+                if (dc !== 0) {
+                    const newCol = position.col + dc * offset;
+                    const newSquare = new Square(position.row, newCol);
+
+                    if ((!isIn(position.row, newCol)) || board.getPiece(newSquare) !== undefined) {
+                        break;
+                    }
+
+                    availableMoves.push(newSquare);
+                }
+            }
+        });
+
+        return availableMoves;
     }
 }
