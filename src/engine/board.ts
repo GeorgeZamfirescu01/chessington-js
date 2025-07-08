@@ -9,6 +9,7 @@ export default class Board {
     public moveCounter: number = 0;
     public enPassant?: Square = undefined;
     public BOARD_SIDE = 8;
+    public gameOver: boolean = false;
     private readonly board: (Piece | undefined)[][];
 
     constructor(currentPlayer?: Player) {
@@ -18,6 +19,11 @@ export default class Board {
 
     public clone() {
         const newBoard = new Board();
+        newBoard.currentPlayer = this.currentPlayer;
+        newBoard.moveCounter = this.moveCounter;
+        newBoard.enPassant = this.enPassant;
+        newBoard.gameOver = this.gameOver;
+
         for (let i = 0; i < this.BOARD_SIDE; i++) {
             for (let j = 0; j < this.BOARD_SIDE; j++) {
                 newBoard.board[i][j] = this.board[i][j]?.clone();
@@ -56,6 +62,10 @@ export default class Board {
     }
 
     public movePiece(fromSquare: Square, toSquare: Square) {
+        if (this.gameOver) {
+            return;
+        }
+
         const movingPiece = this.getPiece(fromSquare);        
         if (!!movingPiece && movingPiece.player === this.currentPlayer) {
             this.setPiece(toSquare, movingPiece);
@@ -112,15 +122,7 @@ export default class Board {
                 for (const toSquare of piece.getAvailableMoves(this)) {
                     const copiedBoard = this.clone();
                     const copyPiece = copiedBoard.getPiece(this.findPiece(piece));
-                    console.log(piece.getAvailableMoves(this));
                     copyPiece?.moveTo(copiedBoard, toSquare);
-                    for (const row of copiedBoard.board) {
-                        for (const elem of row) {
-                            if (elem) {
-                                console.log(elem, elem.constructor.name);
-                            }
-                        }
-                    }
                     if (!copiedBoard.isInCheck(player)) {
                         escaped = true;
                         break;
@@ -130,6 +132,10 @@ export default class Board {
             if (escaped) {
                 break;
             }
+        }
+
+        if (!escaped) {
+            this.gameOver = true;
         }
 
         return !escaped;

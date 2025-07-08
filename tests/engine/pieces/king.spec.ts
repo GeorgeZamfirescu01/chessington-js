@@ -5,6 +5,10 @@ import Board from '../../../src/engine/board';
 import Player from '../../../src/engine/player';
 import Square from '../../../src/engine/square';
 import Queen from "../../../src/engine/pieces/queen";
+import GameSettings from "../../../src/engine/gameSettings";
+import Rook from "../../../src/engine/pieces/rook";
+import Knight from "../../../src/engine/pieces/knight";
+import Bishop from "../../../src/engine/pieces/bishop";
 
 describe('King', () => {
 
@@ -88,7 +92,7 @@ describe('King', () => {
 
         king.moveTo(board, new Square(7, 1));
         board.isInCheck(Player.WHITE).should.be.equal(true);
-    })
+    });
 
     it('can get checkmated', () => {
         const king = new King(Player.WHITE);
@@ -101,7 +105,46 @@ describe('King', () => {
 
         board.setPiece(new Square(2, 1), pawn);
         board.isInCheckmate(Player.WHITE).should.be.equal(true);
-    })
+    });
+
+    it.only('can get out of check', () => {
+        for (let i = 0; i < GameSettings.BOARD_SIZE; i++) {
+            board.setPiece(Square.at(1, i), new Pawn(Player.WHITE));
+            board.setPiece(Square.at(6, i), new Pawn(Player.BLACK));
+        }
+
+        for (let i of [0, 7]) {
+            board.setPiece(Square.at(0, i), new Rook(Player.WHITE));
+            board.setPiece(Square.at(7, i), new Rook(Player.BLACK));
+        }
+
+        for (let i of [1, 6]) {
+            board.setPiece(Square.at(0, i), new Knight(Player.WHITE));
+            board.setPiece(Square.at(7, i), new Knight(Player.BLACK));
+        }
+
+        for (let i of [2, 5]) {
+            board.setPiece(Square.at(0, i), new Bishop(Player.WHITE));
+            board.setPiece(Square.at(7, i), new Bishop(Player.BLACK));
+        }
+
+        board.setPiece(Square.at(0, 3), new Queen(Player.WHITE));
+        board.setPiece(Square.at(7, 3), new Queen(Player.BLACK));
+
+        board.setPiece(Square.at(0, 4), new King(Player.WHITE));
+        board.setPiece(Square.at(7, 4), new King(Player.BLACK));
+
+        board.movePiece(Square.at(1, 4), Square.at(2, 4));
+        board.movePiece(Square.at(6, 0), Square.at(5, 0));
+        board.movePiece(Square.at(0, 3), Square.at(2, 5));
+        board.movePiece(Square.at(5, 0), Square.at(4, 0));
+        board.movePiece(Square.at(2, 5), Square.at(3, 4));
+        board.movePiece(Square.at(4, 0), Square.at(3, 0));
+        board.movePiece(Square.at(3, 4), Square.at(6, 4));
+
+        board.isInCheck(Player.BLACK).should.be.equal(true);
+        board.isInCheckmate(Player.BLACK).should.be.equal(false);
+    });
 
     // it('can do castling on kingside', () => {
     //     const king = new King(Player.WHITE);
